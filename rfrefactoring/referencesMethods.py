@@ -48,7 +48,7 @@ def get_step_object_present_method():
 def get_for_loop_object_present_method():
     def get_for_loop_str(forLoop):
         step_present_method = get_step_object_present_method()
-        present_str = ": "
+        present_str = ""
         for data in forLoop.as_list():
             present_str+=data+"    "
         present_str = present_str.strip()

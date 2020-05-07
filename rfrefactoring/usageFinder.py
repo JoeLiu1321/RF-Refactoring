@@ -13,13 +13,11 @@ class KeywordUsageFinder:
         return Reference(attribute, get_present_method(attribute), get_replace_method(attribute, 'keyword'))
 
     def find_usage_from_keyword(self, targetKeyword, sourceKeyword):
-        source = [step for step in sourceKeyword.steps]
-        source.append(sourceKeyword.teardown)
+        source = [step for step in sourceKeyword.steps+[sourceKeyword.teardown]]
         return [self.get_keyword_references_from_attribute(targetKeyword, step) for step in source if is_keyword_use_in_attribute(targetKeyword, step)]
 
     def find_usage_from_testcase(self, targetKeyword, testcase):
-        source = [step for step in testcase.steps]
-        source.extend([testcase.template, testcase.setup, testcase.teardown])
+        source = [step for step in testcase.steps+[testcase.template, testcase.setup, testcase.teardown]]
         return [self.get_keyword_references_from_attribute(targetKeyword, setting) for setting in source if is_keyword_use_in_attribute(targetKeyword, setting)]
 
     def find_usage_from_settings(self, targetKeyword, setting):

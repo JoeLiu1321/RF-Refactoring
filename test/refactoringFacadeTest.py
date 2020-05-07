@@ -1,7 +1,7 @@
 import unittest
 from init import test_data
-from refactoring.refactoringFacade import RefactoringFacade
-from refactoring.testDataVisitor import FindVisitor
+from rfrefactoring.refactoringFacade import RefactoringFacade
+from rfrefactoring.testDataVisitor import FindVisitor
 class RefactoringFacadeTest(unittest.TestCase):
     def setUp(self):
         self.facade = RefactoringFacade()

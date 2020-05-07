@@ -1,9 +1,8 @@
 import unittest
 from robot.parsing.model import TestData
 from init import test_data,get_instance_from_testData
-# from src.referencesMethods import *
-from refactoring.reference import Reference
-from refactoring.referencesMethods import get_variable_match_result, get_for_loop_object_present_method, get_for_loop_object_replace_method, get_setting_object_present_method, get_setting_object_replace_method, get_step_object_present_method, get_step_object_replace_method, get_variable_replace_str, get_present_method
+from rfrefactoring.reference import Reference
+from rfrefactoring.referencesMethods import get_variable_match_result, get_for_loop_object_present_method, get_for_loop_object_replace_method, get_setting_object_present_method, get_setting_object_replace_method, get_step_object_present_method, get_step_object_replace_method, get_variable_replace_str, get_present_method
 class ReferencesMethodsTest(unittest.TestCase):
     def setUp(self):
         self.suite = TestData(source=test_data+"/test_data.robot")
@@ -72,8 +71,6 @@ class ReferencesMethodsTest(unittest.TestCase):
     def test_for_loop_object_present_method(self):
         self.assertIsNotNone(self.for_loop)
         present = get_for_loop_object_present_method()
-        print("\n",present(self.for_loop))
-        print(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}")
         self.assertEquals(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}",present(self.for_loop))
     
     def test_for_loop_object_replace_method(self):

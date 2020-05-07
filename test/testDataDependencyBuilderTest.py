@@ -1,8 +1,8 @@
 import unittest
 from os import path
 from robot.parsing.model import ResourceFile, TestData
-from refactoring.testDataDependencyBuilder import TestDataDependencyBuilder
-from refactoring.testDataVisitor import TestDataVisitor, FindVisitor
+from rfrefactoring.testDataDependencyBuilder import TestDataDependencyBuilder
+from rfrefactoring.testDataVisitor import TestDataVisitor, FindVisitor
 from init import test_data, ezScrum_test_data
 class TestDataDependencyBuilderTest(unittest.TestCase):
     def setUp(self):
