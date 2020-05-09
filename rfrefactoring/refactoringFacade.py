@@ -56,6 +56,10 @@ class RefactoringFacade:
         node.accept(TestDataVisitor(visit))
         return [reference for reference in references.values() if len(reference['references']) > 0 ]
 
+    def get_local_variable_references(self,testCaseObj, variable):
+        finder = VariableUsageFinder()
+        return finder.find_local_variable_from_test_case_obj(testCaseObj, variable)
+
     def rename_variable_references(self, references, oldVariableName, newVariableName):
         VariableRefactorHelper().rename_variable(references, oldVariableName, newVariableName)
 

@@ -59,20 +59,20 @@ class VariableUsageFinder:
                 return len(arg)>1 and self.is_variable_match(variable, arg[0])
         return any([is_arg_match(variable, data) for data in argument.as_list()])
         
-    def get_references_from_attribute(self, variable, attribute):
+    def get_references_from_attribute(self, attribute):
             return Reference(attribute, get_present_method(attribute) ,get_replace_method(attribute, 'variable'))
 
     def find_global_variable_from_testcase_obj(self, variable, testcase):
         testcase_contents = [content for content in testcase]
         variable_assign_step = next((step for step in testcase.steps if self.is_var_assign_in_step(variable, step)),None)
         source = [testcase_contents[index] for index in range(testcase_contents.index(variable_assign_step))] if variable_assign_step else testcase_contents
-        return [self.get_references_from_attribute(variable, content) for content in source if self.is_var_use_in_attribute(variable, content)]
+        return [self.get_references_from_attribute(content) for content in source if self.is_var_use_in_attribute(variable, content)]
 
     def find_global_variable_usage_from_keyword(self, variable, keyword):
         return [] if self.is_var_def_in_argument(variable, keyword.args) else self.find_global_variable_from_testcase_obj(variable, keyword)
 
     def find_global_variable_usage_from_setting(self, variable, settingTable):
-        return [self.get_references_from_attribute(variable, setting) for setting in settingTable if self.is_var_use_in_attribute(variable, setting)]
+        return [self.get_references_from_attribute(setting) for setting in settingTable if self.is_var_use_in_attribute(variable, setting)]
 
     def find_global_variable_from_testdata_file(self, variable, testData):
         def is_variable_def_in_testData(variable, testData):
@@ -89,4 +89,4 @@ class VariableUsageFinder:
         return {'testdata':testData, 'references':references}
     
     def find_local_variable_from_test_case_obj(self, variable, testcase):
-        return [self.get_references_from_attribute(variable, content) for content in testcase if self.is_var_use_in_attribute(variable, content)]
+        return [self.get_references_from_attribute(content) for content in testcase if self.is_var_use_in_attribute(variable, content)]
