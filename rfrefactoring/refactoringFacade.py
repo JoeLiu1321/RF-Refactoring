@@ -6,7 +6,7 @@ from .testDataVisitor import TestDataVisitor, FindVisitor
 from .usageFinder import KeywordUsageFinder, VariableUsageFinder
 from .refactorHelper import KeywordRefactorHelper, VariableRefactorHelper
 from robot.parsing.model import ResourceFile
-from .referencesMethods import get_keyword_object_replace_method, get_variable_object_replace_method
+from .referencesMethods import get_keyword_object_replace_method, get_variable_object_replace_method, get_present_method
 
 class RefactoringFacade:
     def get_instance_from_testData(self, instanceName, table):
@@ -77,8 +77,9 @@ class RefactoringFacade:
     def save(self, testData):
         testData.save()
 
-    def print_dependency(self, root):
-        def visit(node):
-            print(node.get_data().source)
-            return True
-        root.accept(TestDataVisitor(visit))
+    def present_keyword(self, keyword):
+        present_result = keyword.name+"\n"
+        for attr in keyword:
+            present_method = get_present_method(attr)
+            present_result += "    "+present_method(attr)+"\n"
+        return present_result
