@@ -89,4 +89,4 @@ class VariableUsageFinder:
         return {'testdata':testData, 'references':references}
     
     def find_local_variable_from_test_case_obj(self, variable, testcase):
-        return [self.get_references_from_attribute(content) for content in testcase if self.is_var_use_in_attribute(variable, content)]
+        return [self.get_references_from_attribute(content) for content in [testcase.doc, testcase.tags, testcase.timeout] + testcase.steps + [testcase.teardown, testcase.return_] if self.is_var_use_in_attribute(variable, content)]

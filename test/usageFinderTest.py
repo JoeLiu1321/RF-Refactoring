@@ -144,7 +144,7 @@ class VariableUsageFinderTest(unittest.TestCase):
             variable_name = '${project_name}'
             self.assertIsNotNone(keyword)
             usages = self.variable_finder.find_local_variable_from_test_case_obj(variable_name, keyword)
-            self.assertEqual(5, len(usages))
+            self.assertEqual(4, len(usages))
 
         def test_with_testcase():
             testcase = get_instance_from_testData('test temp', self.suite.testcase_table)
