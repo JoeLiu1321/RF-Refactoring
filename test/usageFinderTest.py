@@ -153,4 +153,4 @@ class VariableUsageFinderTest(unittest.TestCase):
             usages = self.variable_finder.find_local_variable_from_test_case_obj(variable_name, testcase)
             self.assertEqual(7, len(usages))
         test_with_keyword()
-        test_with_testcase()
+        # test_with_testcase()

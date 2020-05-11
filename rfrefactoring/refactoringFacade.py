@@ -1,6 +1,7 @@
 import sys
 from os import path
 from robot.api import TestData
+from robot.parsing.model import Step
 from .testDataDependencyBuilder import TestDataDependencyBuilder
 from .testDataVisitor import TestDataVisitor, FindVisitor
 from .usageFinder import KeywordUsageFinder, VariableUsageFinder
@@ -73,6 +74,15 @@ class RefactoringFacade:
     def rename_variable_def(self, variable, newName):
         replace_method = get_variable_object_replace_method()
         replace_method(variable, variable.name, newName)
+
+    def modify_reference(self, reference, referenceValue):
+        replace_value = referenceValue.split("    ")
+        reference_obj = reference.reference
+        if isinstance(reference_obj, Step):
+            reference_obj.__init__(replace_value)
+        else:
+            reference_obj._set_initial_value()
+            reference_obj._populate(replace_value[1:])
 
     def save_test_data_files(self, testDataFiles):
         for testData in testDataFiles:
