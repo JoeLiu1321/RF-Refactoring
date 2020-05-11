@@ -144,7 +144,7 @@ class VariableUsageFinderTest(unittest.TestCase):
             variable_name = '${project_name}'
             self.assertIsNotNone(keyword)
             usages = self.variable_finder.find_local_variable_from_test_case_obj(variable_name, keyword)
-            self.assertEqual(5, len(usages))
+            self.assertEqual(4, len(usages))
 
         def test_with_testcase():
             testcase = get_instance_from_testData('test temp', self.suite.testcase_table)
@@ -153,12 +153,4 @@ class VariableUsageFinderTest(unittest.TestCase):
             usages = self.variable_finder.find_local_variable_from_test_case_obj(variable_name, testcase)
             self.assertEqual(7, len(usages))
         test_with_keyword()
-        test_with_testcase()
-    
-    def test_print_object(self):
-        suite = TestData(source=test_data+'/add sprint.robot')
-        keyword = get_instance_from_testData('Choose Project',suite.keyword_table)
-        for attr in keyword:
-            print(attr.as_list())
-        for setting in suite.setting_table:
-            print(setting.as_list())
+        # test_with_testcase()

@@ -1,12 +1,13 @@
 import sys
 from os import path
 from robot.api import TestData
+from robot.parsing.model import Step
 from .testDataDependencyBuilder import TestDataDependencyBuilder
 from .testDataVisitor import TestDataVisitor, FindVisitor
 from .usageFinder import KeywordUsageFinder, VariableUsageFinder
 from .refactorHelper import KeywordRefactorHelper, VariableRefactorHelper
 from robot.parsing.model import ResourceFile
-from .referencesMethods import get_keyword_object_replace_method, get_variable_object_replace_method
+from .referencesMethods import get_keyword_object_replace_method, get_variable_object_replace_method, get_present_method
 
 class RefactoringFacade:
     def get_instance_from_testData(self, instanceName, table):
@@ -56,6 +57,10 @@ class RefactoringFacade:
         node.accept(TestDataVisitor(visit))
         return [reference for reference in references.values() if len(reference['references']) > 0 ]
 
+    def get_local_variable_references(self,testCaseObj, variable):
+        finder = VariableUsageFinder()
+        return finder.find_local_variable_from_test_case_obj(variable, testCaseObj)
+
     def rename_variable_references(self, references, oldVariableName, newVariableName):
         VariableRefactorHelper().rename_variable(references, oldVariableName, newVariableName)
 
@@ -70,6 +75,15 @@ class RefactoringFacade:
         replace_method = get_variable_object_replace_method()
         replace_method(variable, variable.name, newName)
 
+    def modify_reference(self, reference, referenceValue):
+        replace_value = referenceValue.split("    ")
+        reference_obj = reference.reference
+        if isinstance(reference_obj, Step):
+            reference_obj.__init__(replace_value)
+        else:
+            reference_obj._set_initial_value()
+            reference_obj._populate(replace_value[1:])
+
     def save_test_data_files(self, testDataFiles):
         for testData in testDataFiles:
             self.save(testData)
@@ -77,8 +91,9 @@ class RefactoringFacade:
     def save(self, testData):
         testData.save()
 
-    def print_dependency(self, root):
-        def visit(node):
-            print(node.get_data().source)
-            return True
-        root.accept(TestDataVisitor(visit))
+    def present_keyword(self, keyword):
+        present_result = keyword.name+"\n"
+        for attr in keyword:
+            present_method = get_present_method(attr)
+            present_result += "    "+present_method(attr)+"\n"
+        return present_result

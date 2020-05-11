@@ -68,20 +68,19 @@ class ReferencesMethodsTest(unittest.TestCase):
         replace(self.step, variable_name, new_name)
         self.assertEqual("Log    ${test123}", present(self.step))
     
-    def test_for_loop_object_present_method(self):
-        self.assertIsNotNone(self.for_loop)
-        present = get_for_loop_object_present_method()
-        self.assertEquals(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}",present(self.for_loop))
+    # def test_for_loop_object_present_method(self):
+    #     self.assertIsNotNone(self.for_loop)
+    #     present = get_for_loop_object_present_method()
+    #     self.assertEquals(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}",present(self.for_loop))
     
-    def test_for_loop_object_replace_method(self):
-        self.assertIsNotNone(self.for_loop)
-        
-        present = get_present_method(self.for_loop)
-        replace = get_for_loop_object_replace_method('variable')
-        variable_name = "${testVariable}"
-        new_name = "for_loop_variable"
-        replace(self.for_loop, variable_name, new_name)
-        self.assertEquals(": FOR    ${var}    IN    @{for_loop_variable}\n\\    Log    ${times}\n\\    test    ${for_loop_variable}", present(self.for_loop))
+    # def test_for_loop_object_replace_method(self):
+    #     self.assertIsNotNone(self.for_loop)
+    #     present = get_present_method(self.for_loop)
+    #     replace = get_for_loop_object_replace_method('variable')
+    #     variable_name = "${testVariable}"
+    #     new_name = "for_loop_variable"
+    #     replace(self.for_loop, variable_name, new_name)
+    #     self.assertEquals(": FOR    ${var}    IN    @{for_loop_variable}\n\\    Log    ${times}\n\\    test    ${for_loop_variable}", present(self.for_loop))
     
     def test_present_and_replace_with_step_reference(self):
         reference = Reference(self.step, get_step_object_present_method(), get_step_object_replace_method('variable'))
