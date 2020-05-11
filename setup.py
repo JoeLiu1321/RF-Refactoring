@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="JoeLiu-RF Refactoring",
-    version="1.0.4",
+    version="1.0.5",
     author="Joe Liu",
     author_email="angrybirdliu@gmail.com",
     description="RF Refactoring package",

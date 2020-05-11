@@ -154,3 +154,11 @@ class VariableUsageFinderTest(unittest.TestCase):
             self.assertEqual(7, len(usages))
         test_with_keyword()
         test_with_testcase()
+    
+    def test_print_object(self):
+        suite = TestData(source=test_data+'/add sprint.robot')
+        keyword = get_instance_from_testData('Choose Project',suite.keyword_table)
+        for attr in keyword:
+            print(attr.as_list())
+        for setting in suite.setting_table:
+            print(setting.as_list())
