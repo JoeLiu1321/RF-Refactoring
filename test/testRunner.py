@@ -1,8 +1,9 @@
 import unittest
 from os import path
 import sys
-sys.path.append(path.abspath(path.dirname(path.dirname(__file__))))
-
+p = path.normpath(path.dirname(path.abspath(__file__))+"/../..")
+sys.path.append(p)
+print(p)
 from usageFinderTest import KeywordUsageFinderTest, VariableUsageFinderTest
 from testDataDependencyBuilderTest import TestDataDependencyBuilderTest
 from referencesMethodsTest import ReferencesMethodsTest

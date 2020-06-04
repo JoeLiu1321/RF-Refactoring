@@ -2,9 +2,6 @@ from os import path
 from robot.parsing.model import ResourceFile
 from .testDataVisitor import FindVisitor, TestDataNode, TestDataVisitor
 class TestDataDependencyBuilder:
-    def __init__(self):
-        self.root = None
-
     def build(self,testDataDir):
         def merge_resources_tree(resource_trees):
             def get_unimported_resource(trees):

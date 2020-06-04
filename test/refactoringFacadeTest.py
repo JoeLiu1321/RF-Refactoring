@@ -1,7 +1,9 @@
 import unittest
 from init import test_data
-from rfrefactoring.refactoringFacade import RefactoringFacade
-from rfrefactoring.testDataVisitor import FindVisitor
+from RF_Refactoring.rfrefactoring.refactoringFacade import RefactoringFacade
+from RF_Refactoring.rfrefactoring.testDataVisitor import FindVisitor
+from RF_Refactoring.rfrefactoring.reference import Reference
+from RF_Refactoring.rfrefactoring.referencesMethods import get_present_method, get_replace_method
 class RefactoringFacadeTest(unittest.TestCase):
     def setUp(self):
         self.facade = RefactoringFacade()
@@ -67,14 +69,3 @@ class RefactoringFacadeTest(unittest.TestCase):
         for reference in references:
             total_references_after_rename.extend(reference['references'])
         self.assertEqual(len(total_references) , len(total_references_after_rename))
-    
-    def test_modify_reference(self):
-        source = test_data+'/testResource.txt'
-        kw = self.facade.get_keyword_obj_from_file(self.root, "Find Variable Usage Test Keyword", source)
-        self.assertIsNotNone(kw)
-        step = kw.steps[0]
-        fixture = kw.teardown
-        self.facade.modify_reference(step,"Log    123")
-        self.facade.modify_reference(fixture,"[Teardown]    Find Usage Test Keyword2    ${resourceFileVariable}1    123123123123123")
-        print(step.as_list())
-        print(fixture.as_list())

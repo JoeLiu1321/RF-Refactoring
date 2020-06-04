@@ -3,7 +3,7 @@ import re
 from os import path
 from robot.api import TestData
 from init import test_data, get_instance_from_testData
-from rfrefactoring.usageFinder import *
+from RF_Refactoring.rfrefactoring.usageFinder import *
 from robot.parsing.model import ResourceFile
 
 class KeywordUsageFinderTest(unittest.TestCase):
