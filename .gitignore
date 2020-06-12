@@ -1,2 +1,7 @@
-__pycache__/
 build/
+__pycache__
+/bin/
+cachedir
+libspecs
+.class
+.jython_cache/
