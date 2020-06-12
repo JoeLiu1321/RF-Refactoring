@@ -21,8 +21,8 @@ public class RefactorHelperTest {
 	@Before
 	public void setUp() {
 		initRefactorHelper();
-		this.testDataPath = curDir+"/test_data/銝剜�楝敺�";
-		testDataRoot = helper.buildTestData(curDir+"/test_data");
+		this.testDataPath = curDir+"/test_data/";
+		testDataRoot = helper.buildTestData(testDataPath);
 	}
 	
 	@After
@@ -32,8 +32,8 @@ public class RefactorHelperTest {
 	
 	@Test
 	public void testGetUserSelectKeyword(){
-		String userTestData = testDataPath+"/robot_project/RobotTests/DCTLibrary.txt";
-		String userSelectKeyword = "Login";
+		String userTestData = testDataPath+"/ezScrum.txt";
+		String userSelectKeyword = "Login EzScrum";
 		PyObject keyword = helper.getKeyword(this.testDataRoot, userSelectKeyword, userTestData);
 		String actualKeywordName = keyword.__getattr__("name").toString();
 		assertEquals(userSelectKeyword, actualKeywordName);	
@@ -41,76 +41,72 @@ public class RefactorHelperTest {
 	
 	@Test
 	public void testGetUserSelectVariable() {
-		String userTestData = testDataPath+"/robot_project/RobotTests/DCTLibrary.txt";
-		String userSelectVariable = "${workFlowFrame}";
+		String userTestData = testDataPath+"/testResource.txt";
+		String userSelectVariable = "${resourceFileVariable}";
 		PyObject variable = helper.getVariable(testDataRoot, userSelectVariable, userTestData);
 		assertNotEquals(Py.None, variable);
 		String actualValue = ((PyList)variable.__getattr__("value")).get(0).toString();
-		assertEquals("xpath://iframe[@id='id_wf_frame']", actualValue);
+		assertEquals("resource file test data", actualValue);
 	}
 	
 	@Test
 	public void testGetCommonKeywordReferences() {
-		String userTestData = testDataPath+"/robot_project/RobotTests/DCTLibrary.txt";
-		String userSelectKeyword = "Login";
+		String userTestData = testDataPath+"/ezScrum.txt";
+		String userSelectKeyword = "Login EzScrum";
 		PyObject keyword = helper.getKeyword(this.testDataRoot, userSelectKeyword, userTestData);
 		PyList references = helper.getKeywordReferences(this.testDataRoot, keyword);
-		assertEquals(7, references.size());
+		assertEquals(4, references.size());
 	}
 	
 	@Test
 	public void testGetSelfKeywordReferences() {
-		String testData = testDataPath+"/robot_project/RobotTests/Regression Test/TMD-11538 circuit list.robot";
-		String userSelectKeyword = "Circuits List::Click View Option";
+		String testData = testDataPath+"/add sprint.robot";
+		String userSelectKeyword = "Choose Project";
 		PyObject keyword = helper.getKeyword(this.testDataRoot, userSelectKeyword, testData);
 		PyList references = helper.getKeywordReferences(testDataRoot, keyword);
 		assertEquals(1, references.size());
 		PyDictionary testDataReference = (PyDictionary)references.getArray()[0];
 		PyList referencesData = (PyList)testDataReference.get(new PyString("references"));
 		PyObject referencesFile = testDataReference.get(new PyString("testdata"));
-		assertEquals(1, referencesData.size());
-		assertEquals(Paths.get(testData).toAbsolutePath().toString(), Paths.get(referencesFile.__getattr__("source").toString()).toAbsolutePath().toString());
-		PyObject firstStep = referencesData.getArray()[0];
-		String referencePresent = firstStep.invoke("get_present_value").toString();
-		assertEquals("Circuits List::Click View Option    ${viewName}    cus-delete-view-menu    Delete View", referencePresent);	
+		assertEquals(2, referencesData.size());
+		assertEquals(Paths.get(testData).toAbsolutePath().toString(), Paths.get(referencesFile.__getattr__("source").toString()).toAbsolutePath().toString());	
 	}
 	
 	@Test
 	public void testGetSelfVariableReferences() {
-		String testData = testDataPath+"/robot_project/RobotTests/Regression Test/TMD-2562 Filtering list by quick cabinet name search.robot";
-		String variableName = "${columnName}";
+		String testData = testDataPath+"/add story by excel.robot";
+		String variableName = "${StoryPath}";
 		PyObject variable = this.helper.getVariable(testDataRoot, variableName, testData);
 		assertNotEquals(Py.None, variable);
 		PyList references = helper.getVariableReferences(testDataRoot, variable);
 		assertEquals(1, references.size());
 		PyDictionary testDataReferences = (PyDictionary)references.get(0);
 		PyList referencesData = (PyList)testDataReferences.get(new PyString("references"));
-		assertEquals(1, referencesData.size());
-		PyString firstStepPresent = (PyString)referencesData.getArray()[0].invoke("get_present_value");
-		assertEquals("Items List::Filter Items By Cabinet    ${columnName}", firstStepPresent.toString());
+		assertEquals(3, referencesData.size());
 	}
 	
 	@Test
 	public void testGetCommonVariableReferences() {
-		String testData = testDataPath+"/robot_project/RobotTests/DCTLibrary.txt";
-		String variableName = "${modelsLibraryFrame}";
+		String testData = testDataPath+"/testResource.txt";
+		String variableName = "${resourceFileVariable}";
 		PyObject variable = this.helper.getVariable(testDataRoot, variableName, testData);
 		assertNotEquals(Py.None, variable);
 		PyList references = helper.getVariableReferences(testDataRoot, variable);
-		assertEquals(26, references.size());
+		assertEquals(1, references.size());
 	}
 	
 	@Test
 	public void testWithUnicodeProject(){
-		String userTestData = testDataPath+"/robot_project/RobotTests/DCTLibrary.txt";
-		String userSelectKeyword = "Login";
+		String userTestData = testDataPath+"/中文路徑/ezScrum.txt";
+		String userSelectKeyword = "Login EzScrum";
 		PyObject keyword = helper.getKeyword(this.testDataRoot, userSelectKeyword, userTestData);
 		String actualKeywordName = keyword.__getattr__("name").toString();
 		assertEquals(userSelectKeyword, actualKeywordName);	
 	}
 	
 	public void initRefactorHelper() {
-		String pythonSite = "C:/Users/lab1321/AppData/Local/Programs/Python/Python37/Lib/site-packages";
+		//pythonSite is the site-packages path, you should replace it with yours.
+		String pythonSite = "C:\\Users\\angry\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python37\\site-packages";
 		String jythonPath = pythonSite+"/rfrefactoring/jython-standalone-2.7.2b3.jar";
 		PluginHelper.initPython(jythonPath, pythonSite);
 		this.curDir = System.getProperty("user.dir");
