@@ -1,8 +1,8 @@
 import unittest
 from robot.parsing.model import TestData
 from init import test_data,get_instance_from_testData
-from RF_Refactoring.rfrefactoring.reference import Reference
-from RF_Refactoring.rfrefactoring.referencesMethods import get_variable_match_result, get_for_loop_object_present_method, get_for_loop_object_replace_method, get_setting_object_present_method, get_setting_object_replace_method, get_step_object_present_method, get_step_object_replace_method, get_variable_replace_str, get_present_method
+from python_package.rfrefactoring.reference import Reference
+from python_package.rfrefactoring.referencesMethods import get_variable_match_result, get_for_loop_object_present_method, get_for_loop_object_replace_method, get_setting_object_present_method, get_setting_object_replace_method, get_step_object_present_method, get_step_object_replace_method, get_variable_replace_str, get_present_method
 class ReferencesMethodsTest(unittest.TestCase):
     def setUp(self):
         self.suite = TestData(source=test_data+"/test_data.robot")

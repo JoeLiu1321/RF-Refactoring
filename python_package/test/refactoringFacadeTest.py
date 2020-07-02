@@ -1,9 +1,9 @@
 import unittest
 from init import test_data
-from RF_Refactoring.rfrefactoring.refactoringFacade import RefactoringFacade
-from RF_Refactoring.rfrefactoring.testDataVisitor import FindVisitor
-from RF_Refactoring.rfrefactoring.reference import Reference
-from RF_Refactoring.rfrefactoring.referencesMethods import get_present_method, get_replace_method
+from python_package.rfrefactoring.refactoringFacade import RefactoringFacade
+from python_package.rfrefactoring.testDataVisitor import FindVisitor
+from python_package.rfrefactoring.reference import Reference
+from python_package.rfrefactoring.referencesMethods import get_present_method, get_replace_method
 class RefactoringFacadeTest(unittest.TestCase):
     def setUp(self):
         self.facade = RefactoringFacade()
