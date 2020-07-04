@@ -40,19 +40,28 @@ def get_replace_str_method(replaceKind):
     """
     def get_variable_replace_str(targetStr, old, new):
         match_result = get_variable_match_result(old, targetStr)
-            #get the
         replace_result =  targetStr
         for matchStr in match_result:
+            #get the '[' index in variable reference.
             var_name_end_index = matchStr.find('[')
-            var_name_target = matchStr[matchStr.find("{")+1:var_name_end_index if var_name_end_index!=-1 else matchStr.find("}")]  
+            #get the variable name without symbol.EX:${test}=>test.
+            var_name_target = matchStr[matchStr.find("{")+1:var_name_end_index if var_name_end_index!=-1 else matchStr.find("}")]
+            #replace the name with the new one in variable.EX:${test}=>${newName}
             replace_str = matchStr.replace(var_name_target, new, 1)
+            #replace the whole variable in targetStr.EX:Log    ${test}=>Log    ${newName}
             replace_result = replace_result.replace(matchStr, replace_str, 1)
         return replace_result
     return {'variable':get_variable_replace_str, 'keyword':get_keyword_replace_str}[replaceKind]
 
+"""
+This func is used to wrapped the 'get_replace_str_method'.
+"""
 def get_variable_replace_str(targetStr, old, new):
     return get_replace_str_method('variable')(targetStr, old, new)
 
+"""
+This func is used to get the present func of `setting` object.
+"""
 def get_setting_object_present_method():
     def func(setting):
         present_str = ""
@@ -60,7 +69,9 @@ def get_setting_object_present_method():
             present_str+=data+"    "
         return present_str.strip()
     return func
-
+"""
+This func is used to get the present func of `step` object.
+"""
 def get_step_object_present_method():
     def func(step):
         present_str = ""
@@ -68,7 +79,9 @@ def get_step_object_present_method():
             present_str+=data+"    "
         return present_str.strip()
     return func
-
+"""
+This func is used to get the present func of `forLoop` object.
+"""
 def get_for_loop_object_present_method():
     def get_for_loop_str(forLoop):
         step_present_method = get_step_object_present_method()
@@ -80,7 +93,9 @@ def get_for_loop_object_present_method():
             present_str+="\n\\    "+step_present_method(step)
         return present_str
     return get_for_loop_str    
-
+"""
+This func is used to get the present func of `variable` object.
+"""
 def get_variable_object_present_method():
     def func(variable):
         present_str = ""
@@ -88,12 +103,16 @@ def get_variable_object_present_method():
             present_str+=data+"    "
         return present_str.strip()
     return func
-
+"""
+This func is used to get the present func of `keyword` object.
+"""
 def get_keyword_object_present_method():
     def func(keyword):
         return keyword.name
     return func
-
+"""
+This func is used to get the replace func of `setting` object.
+"""
 def get_setting_object_replace_method(replaceKind):
     get_replace_str = get_replace_str_method(replaceKind)
     def replace_setting(setting, old, new):
@@ -101,7 +120,9 @@ def get_setting_object_replace_method(replaceKind):
         setting._set_initial_value()
         setting._populate(datas_after_replace[1:])
     return replace_setting
-
+"""
+This func is used to get the replace func of `import` object.
+"""
 def get_import_object_replace_method(replaceKind):
     get_replace_str = get_replace_str_method(replaceKind)
     def replace_import(_import, old, new):
@@ -109,14 +130,18 @@ def get_import_object_replace_method(replaceKind):
         for index, arg in enumerate(_import.args):
             _import.args[index] = get_replace_str(arg, old, new)
     return replace_import
-
+"""
+This func is used to get the replace func of `step` object.
+"""
 def get_step_object_replace_method(replaceKind):
     get_replace_str = get_replace_str_method(replaceKind)
     def replace_variable(step, old, new):
         datas_after_replace = [get_replace_str(item, old, new) for item in step.as_list()]
         step.__init__(datas_after_replace)
     return replace_variable
-
+"""
+This func is used to get the replace func of `forLoop` object.
+"""
 def get_for_loop_object_replace_method(replaceKind):
     replace_method = get_step_object_replace_method(replaceKind)
     def replace_variable(forLoop, old, new):
@@ -128,20 +153,26 @@ def get_for_loop_object_replace_method(replaceKind):
         for step in forLoop:
             replace_method(step, old, new)
     return {'variable':replace_variable, 'keyword':replace_keyword}[replaceKind]
-
+"""
+This func is used to get the replace func of `variable` object.
+"""
 def get_variable_object_replace_method():
     def func(variable, old, new):
         variable.name = get_variable_replace_str(variable.name, old, new)
         for index, value in enumerate(variable.value):
             variable.value[index] = get_variable_replace_str(value, old, new)
     return func
-
+"""
+This func is used to get the replace func of `keyword` object.
+"""
 def get_keyword_object_replace_method():
     def func(keyword, old, new):
         replace_method = get_replace_str_method('keyword')
         keyword.name = replace_method(keyword.name, old, new)
     return func
-
+"""
+This func is used to get the `present` func according to the object type.
+"""
 def get_present_method(instance):
     if isinstance(instance, Setting):
         return get_setting_object_present_method()
@@ -149,7 +180,9 @@ def get_present_method(instance):
         return get_for_loop_object_present_method()
     elif isinstance(instance, Step):
         return get_step_object_present_method()
-
+"""
+This func is used to get the `replace` func according to the object type.
+"""
 def get_replace_method(instance, replaceKind):
     if isinstance(instance, _Import):
         return get_import_object_replace_method(replaceKind)
