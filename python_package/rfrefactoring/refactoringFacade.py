@@ -140,7 +140,7 @@ class RefactoringFacade:
     This func is used to modify a given reference to a new value.
     reference: a reference object.
     referenceValue: string value of a reference.
-    Note: it can not support for the ForLoop object.
+    Note: it can not support for the ForLoop object yet.
     """
     def modify_reference(self, reference, referenceValue):
         replace_value = referenceValue.split("    ")
@@ -150,14 +150,21 @@ class RefactoringFacade:
         else:
             reference_obj._set_initial_value()
             reference_obj._populate(replace_value[1:])
-
+    """
+    This func is used for save multiple testdata.
+    testDataFiles: the given testData objects.
+    """
     def save_test_data_files(self, testDataFiles):
         for testData in testDataFiles:
             self.save(testData)
 
     def save(self, testData):
         testData.save()
-
+    """
+    This func is used for present keyword.
+    keyword: the keyword object.
+    return: the string use to present the keyword.
+    """
     def present_keyword(self, keyword):
         present_result = keyword.name+"\n"
         for attr in keyword:

@@ -57,7 +57,7 @@ class ReferencesMethodsTest(unittest.TestCase):
     def test_step_object_present_method(self):
         self.assertIsNotNone(self.step)
         present = get_step_object_present_method()
-        self.assertEqual("Log    ${testVariable}",present(self.step))
+        self.assertEqual("Log    ${testvariable}    ${testVariable}",present(self.step))
     
     def test_step_object_replace_method(self):
         self.assertIsNotNone(self.step)
@@ -66,26 +66,26 @@ class ReferencesMethodsTest(unittest.TestCase):
         present = get_step_object_present_method()
         replace = get_step_object_replace_method('variable')
         replace(self.step, variable_name, new_name)
-        self.assertEqual("Log    ${test123}", present(self.step))
+        self.assertEqual("Log    ${%s}    ${%s}" %(new_name, new_name), present(self.step))
     
-    # def test_for_loop_object_present_method(self):
-    #     self.assertIsNotNone(self.for_loop)
-    #     present = get_for_loop_object_present_method()
-    #     self.assertEquals(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}",present(self.for_loop))
+    def test_for_loop_object_present_method(self):
+        self.assertIsNotNone(self.for_loop)
+        present = get_for_loop_object_present_method()
+        self.assertEquals(": FOR    ${var}    IN    @{testVariable}\n\\    Log    ${times}\n\\    test    ${testVariable}",present(self.for_loop))
     
-    # def test_for_loop_object_replace_method(self):
-    #     self.assertIsNotNone(self.for_loop)
-    #     present = get_present_method(self.for_loop)
-    #     replace = get_for_loop_object_replace_method('variable')
-    #     variable_name = "${testVariable}"
-    #     new_name = "for_loop_variable"
-    #     replace(self.for_loop, variable_name, new_name)
-    #     self.assertEquals(": FOR    ${var}    IN    @{for_loop_variable}\n\\    Log    ${times}\n\\    test    ${for_loop_variable}", present(self.for_loop))
+    def test_for_loop_object_replace_method(self):
+        self.assertIsNotNone(self.for_loop)
+        present = get_present_method(self.for_loop)
+        replace = get_for_loop_object_replace_method('variable')
+        variable_name = "${testVariable}"
+        new_name = "for_loop_variable"
+        replace(self.for_loop, variable_name, new_name)
+        self.assertEquals(": FOR    ${var}    IN    @{for_loop_variable}\n\\    Log    ${times}\n\\    test    ${for_loop_variable}", present(self.for_loop))
     
     def test_present_and_replace_with_step_reference(self):
         reference = Reference(self.step, get_step_object_present_method(), get_step_object_replace_method('variable'))
-        self.assertEquals("Log    ${testVariable}" , reference.get_present_value())
+        self.assertEquals("Log    ${testvariable}    ${testVariable}" , reference.get_present_value())
         var_name = "${testVariable}"
         new_name = "newTestVariable"
         reference.replace(var_name, new_name)
-        self.assertEquals("Log    ${newTestVariable}", reference.get_present_value())
+        self.assertEquals("Log    ${%s}    ${%s}" %(new_name, new_name), reference.get_present_value())

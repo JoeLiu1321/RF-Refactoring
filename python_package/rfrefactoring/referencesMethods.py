@@ -1,30 +1,54 @@
 import re
 from robot.parsing.model import ForLoop, Step, Variable
 from robot.parsing.settings import Arguments, Setting, _Import
-
+"""
+This func is used to search the variable name from a given string.
+variableName: string of variable name.
+targetStr: the target string to be search.
+return: the search result.
+"""
 def get_variable_match_result(variableName, targetStr):
     return re.findall(r"[\$\@\&]\{%s(?:\[[\S]*\])?\}" %variableName[2:-1], targetStr, flags=re.IGNORECASE)
-
+"""
+This func is used to search keyword name from a given string.
+keywordName: string of keyword name.
+targetStr: the target string to be search.
+return: whether the targetStr is keyword.
+"""
 def is_keyword_match(keywordName, targetStr):
     return keywordName.lower() == targetStr.lower()
-
+"""
+This func is used to get the replace method.
+replaceKind: kind of replace method which is variable or keyword.
+"""
 def get_replace_str_method(replaceKind):
+    """
+    This func is used to get the replace keyword result of a given string.
+    targetStr: the origin string.
+    old: the string need to be replaced.
+    new: the new string to replace.
+    return: the targetStr after replacing old to new.
+    """
     def get_keyword_replace_str(targetStr, old, new):
-        return targetStr.replace(old, new) if is_keyword_match else targetStr
+        return targetStr.replace(old, new) if is_keyword_match(old, targetStr) else targetStr
+    """
+    This func is used to get the replace variable result of a given string.
+    targetStr: the origin string.
+    old: the string need to be replaced.
+    new: the new string to replace.
+    return: the targetStr after replacing old to new.
+    """
     def get_variable_replace_str(targetStr, old, new):
         match_result = get_variable_match_result(old, targetStr)
-        if len(match_result)>0:
-            matchStr = match_result[0]
+            #get the
+        replace_result =  targetStr
+        for matchStr in match_result:
             var_name_end_index = matchStr.find('[')
             var_name_target = matchStr[matchStr.find("{")+1:var_name_end_index if var_name_end_index!=-1 else matchStr.find("}")]  
-            replace = matchStr.replace(var_name_target, new)
-            return targetStr.replace(matchStr, replace)
-        else:
-            return targetStr
+            replace_str = matchStr.replace(var_name_target, new, 1)
+            replace_result = replace_result.replace(matchStr, replace_str, 1)
+        return replace_result
     return {'variable':get_variable_replace_str, 'keyword':get_keyword_replace_str}[replaceKind]
-
-def get_keyword_replace_str(targetStr, old, new):
-    return get_replace_str_method('keyword')(targetStr, old, new)
 
 def get_variable_replace_str(targetStr, old, new):
     return get_replace_str_method('variable')(targetStr, old, new)

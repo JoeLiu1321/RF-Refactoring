@@ -105,7 +105,7 @@ Test Keyword
     ...    AND    Log    321
 
 Duplicate Variable Keyword
-    Log    ${testVariable}
+    Log    ${testvariable}    ${testVariable}
     Log    321
     ${testVariable} =    Set Variable    duplicate variable test data
     [Teardown]    Run Keywords    Log    ${testVariable}123
