@@ -87,27 +87,42 @@ class VariableReferenceFinder:
                 if self.is_variable_match(variable, assign_variable):
                     return True
             return False
-
+    """
+    This func is used to check whether a variable is used in an attribute.
+    attribute: The decomposition value of step,setting,forloop object.
+    variable: name of a variable.
+    return: whether a variable is used in an given attribute.
+    """
     def is_var_use_in_attribute(self, variable, attribute):
         if isinstance(attribute, ForLoop):
             return any([self.is_var_use_in_attribute(variable, data) for data in attribute]) or any([self.is_variable_match(variable, data) for data in attribute.items])
         return any([self.is_variable_match(variable, data) for data in attribute.as_list()])
-
+    """
+    This func is used to check whether a variable is define in an argument object.
+    variable: name of a variable.
+    argument: the argument object.
+    return: whether the given variable is define in argument. 
+    """
     def is_var_def_in_argument(self, variable, argument):
         def is_arg_match(variable, data):
             arg = data.split("=")
+            #The argument does not have default value.
             if len(arg) == 1:
                 return self.is_variable_match(variable, data)
+            #The argument has default value.
             else:
                 return len(arg)>1 and self.is_variable_match(variable, arg[0])
         return any([is_arg_match(variable, data) for data in argument.as_list()])
         
     def get_references_from_attribute(self, attribute):
-            return Reference(attribute, get_present_method(attribute) ,get_replace_method(attribute, 'variable'))
+        return Reference(attribute, get_present_method(attribute) ,get_replace_method(attribute, 'variable'))
 
     def find_global_variable_references_from_testcase_obj(self, variable, testcase):
         testcase_contents = [content for content in testcase]
+        # This is used to find the step which assign the variable.
         variable_assign_step = next((step for step in testcase.steps if self.is_var_assign_in_step(variable, step)),None)
+        # Calculate the search range.
+        # Search before the step which assign the variable. 
         source = [testcase_contents[index] for index in range(testcase_contents.index(variable_assign_step))] if variable_assign_step else testcase_contents
         return [self.get_references_from_attribute(content) for content in source if self.is_var_use_in_attribute(variable, content)]
 
@@ -121,6 +136,7 @@ class VariableReferenceFinder:
         def is_variable_def_in_testData(variable, testData):
             return any(self.is_variable_match(variable, var.name) for var in testData.variable_table)
         source = variable.parent.parent.source
+        # This is used to distinguish the variable which has same name but define in different source. 
         if path.normpath(source) != path.normpath(testData.source) and is_variable_def_in_testData(variable.name, testData):
             return {'testdata':testData, 'references':[]}
         references = []

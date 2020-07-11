@@ -3,8 +3,7 @@ from os import path
 import sys
 p = path.normpath(path.dirname(path.abspath(__file__))+"/../..")
 sys.path.append(p)
-print(p)
-from usageFinderTest import KeywordReferenceFinderTest, VariableReferenceFinderTest
+from referencesFinderTest import KeywordReferenceFinderTest, VariableReferenceFinderTest
 from testDataDependencyBuilderTest import TestDataDependencyBuilderTest
 from referencesMethodsTest import ReferencesMethodsTest
 from refactoringFacadeTest import RefactoringFacadeTest
