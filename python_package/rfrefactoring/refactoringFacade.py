@@ -4,7 +4,7 @@ from robot.api import TestData
 from robot.parsing.model import Step
 from .testDataDependencyBuilder import TestDataDependencyBuilder
 from .testDataVisitor import TestDataVisitor, FindVisitor
-from .usageFinder import KeywordUsageFinder, VariableUsageFinder
+from .referencesFinder import KeywordReferenceFinder, VariableReferenceFinder
 from .refactorHelper import KeywordRefactorHelper, VariableRefactorHelper
 from robot.parsing.model import ResourceFile
 from .referencesMethods import get_keyword_object_replace_method, get_variable_object_replace_method, get_present_method
@@ -66,14 +66,14 @@ class RefactoringFacade:
     """
     def get_keyword_references(self, root, keyword):
         source = keyword.source
-        finder = KeywordUsageFinder()
+        finder = KeywordReferenceFinder()
         node = self.get_testData_node(root, source)
         references = {}
         def visit(node):
             node_source = node.get_data().source
             #filter the duplicated testdata.
             if node_source not in references.keys():
-                references[node_source] = finder.find_usage_from_testdataFile(keyword.name, node.get_data())
+                references[node_source] = finder.find_references_from_testdataFile(keyword.name, node.get_data())
             return True
         node.accept(TestDataVisitor(visit))
         return [reference for reference in references.values() if len(reference['references']) > 0 ]
@@ -85,13 +85,13 @@ class RefactoringFacade:
     """
     def get_variable_references(self, root, variable):
         source = variable.parent.parent.source
-        finder = VariableUsageFinder()
+        finder = VariableReferenceFinder()
         node = self.get_testData_node(root, source)
         references = {}
         def visit(node):
             node_source = node.get_data().source
             if node_source not in references.keys():
-                references[node_source] = finder.find_global_variable_from_testdata_file(variable, node.get_data())
+                references[node_source] = finder.find_global_variable_references_from_testdata_file(variable, node.get_data())
             return True
         node.accept(TestDataVisitor(visit))
         return [reference for reference in references.values() if len(reference['references']) > 0 ]
@@ -102,8 +102,8 @@ class RefactoringFacade:
     return: all references.
     """
     def get_local_variable_references(self,testCaseObj, variable):
-        finder = VariableUsageFinder()
-        return finder.find_local_variable_from_test_case_obj(variable, testCaseObj)
+        finder = VariableReferenceFinder()
+        return finder.find_local_variable_references_from_test_case_obj(variable, testCaseObj)
     """
     This func is used to rename variable from the given references.
     references: the variable references.
