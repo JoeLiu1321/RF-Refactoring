@@ -106,7 +106,7 @@ public class RefactorHelperTest {
 	
 	public void initRefactorHelper() {
 		//pythonSite is the site-packages path, you should replace it with yours.
-		String pythonSite = "C:\\Users\\angry\\AppData\\Local\\Packages\\PythonSoftwareFoundation.Python.3.7_qbz5n2kfra8p0\\LocalCache\\local-packages\\Python37\\site-packages";
+		String pythonSite = "C:\\Program Files\\Python36\\Lib\\site-packages";
 		String jythonPath = pythonSite+"/rfrefactoring/jython-standalone-2.7.2b3.jar";
 		PluginHelper.initPython(jythonPath, pythonSite);
 		this.curDir = System.getProperty("user.dir");
