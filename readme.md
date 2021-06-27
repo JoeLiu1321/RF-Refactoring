@@ -9,11 +9,16 @@
 1. Install robotframework,
 
     run the following command:
-    > pip install robotframework==3.0.4
+    > pip install robotframework==3.2.2
+
+    move `robot304` in robotAPI into your site-package.
+
 2. Use following command to run all tests.
 
     All tests should be passed.
     > python python_package/test/testRunner.py
+    > 
+    > python python_package/new_test/testRunner.py
 
 ## Eclipse plugin
 1. Download the Eclipse from [here](https://www.eclipse.org/downloads/).
@@ -55,8 +60,13 @@
 
     9.2 Replace the `pythonSite` variable with your site-package path
     ![](/picture/replace_site_package_path_in_test.png)
+    
+    9.3 Open the `test/NewRefactorHelperTest.java`
+    
+    9.4 Replace the `pythonSite` variable with your site-package path
+    ![](/picture/replace_site_package_path_in_new_test.png)
 
-    9.3 Run `RefactorHelperTest` with junit
+    9.5 Run `RefactorHelperTest` and `NewRefactorHelperTest` with junit
 
         All tests should be passed.
 ---
