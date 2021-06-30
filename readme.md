@@ -18,7 +18,7 @@
     All tests should be passed.
     > python python_package/test/testRunner.py
     > 
-    > python python_package/new_test/testRunner.py
+    > python python_package/newTest/testRunner.py
 
 ## Eclipse plugin
 1. Download the Eclipse from [here](https://www.eclipse.org/downloads/).
